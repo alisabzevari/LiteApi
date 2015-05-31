@@ -8,10 +8,16 @@ namespace StrongApi
 {
     internal static class EntityExtensions
     {
-        public static object ExtractIdValue(this object obj)
+        public static object GetId(this object obj)
         {
             var prop = obj.GetType().GetProperty("Id");
             return prop.GetValue(obj);
         }
+        public static void SetId(this object obj, object value)
+        {
+            var prop = obj.GetType().GetProperty("Id");
+            prop.SetValue(obj, value);
+        }
+
     }
 }

@@ -14,7 +14,7 @@ namespace StrongApi.Tests.StrongApiControllerTests
     public class ControllerLogicTests
     {
         private readonly ICollection<Person> _persons;
-        private PersonController _controller;
+        private readonly PersonController _controller;
 
         public ControllerLogicTests()
         {
@@ -42,7 +42,8 @@ namespace StrongApi.Tests.StrongApiControllerTests
         [TestMethod]
         public void Post_must_add_a_person_to_collection_and_return_created_with_its_route()
         {
-            var result = _controller.Post(new PersonDto() { FirstName = "FirstName1", LastName = "LastName1" }) as CreatedAtRouteNegotiatedContentResult<PersonDto>;
+            var untypedResult = _controller.Post(new PersonDto() { FirstName = "FirstName1", LastName = "LastName1" });
+            var result = untypedResult as CreatedNegotiatedContentResult<PersonDto>;
             Assert.IsNotNull(result);
             Assert.AreEqual("FirstName1", result.Content.FirstName);
             Assert.IsTrue(_persons.Any(p => p.FirstName == "FirstName1"));

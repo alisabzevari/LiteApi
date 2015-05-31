@@ -1,17 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace StrongApi.Tests.StrongApiControllerTests
 {
-    public class RoutingTests
+    [TestClass]
+    public class RoutingTests : WebApiTestBase
     {
-            //        Get("http://localhost/api/person/100", message =>
-            //{
-            //    Assert.AreEqual(HttpStatusCode.NotFound, message.StatusCode);
-            //});
+        [TestMethod]
+        public void Post_must_return_created_url()
+        {
+            PostAsJson("http://localhost/api/person", new PersonDto() { Id = 100, FirstName = "New F1", LastName = "new L1" }, message =>
+            {
+                Assert.AreEqual(HttpStatusCode.Created, message.StatusCode);
+                Assert.AreEqual("http://localhost/api/person?id=100", message.Headers.Location.AbsoluteUri);
+            });
+        }
 
+        [TestMethod]
+        public void Get_with_querystring_must_route_correctly()
+        {
+            Get("http://localhost/api/person?id=0", message => Assert.AreEqual(HttpStatusCode.OK, message.StatusCode));
+        }
     }
 }

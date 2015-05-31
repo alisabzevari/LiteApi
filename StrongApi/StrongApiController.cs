@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Routing;
 using AutoMapper;
+using NHibernate.Mapping;
 
 namespace StrongApi
 {
@@ -14,6 +16,8 @@ namespace StrongApi
 
         public StrongApiController(ICollection<TEntity> collection)
         {
+            Mapper.CreateMap<TEntity, TDto>();
+            Mapper.CreateMap<TDto, TEntity>();
             Collection = collection;
         }
 
@@ -29,7 +33,7 @@ namespace StrongApi
         {
             var entity = MapToEntity(dto);
             Collection.Add(entity);
-            return Created(GetLocation(entity), entity);
+            return Created(GetLocation(entity), MapToDto(entity));
         }
 
         public IHttpActionResult Put(TId id, [FromBody] TDto dto)
@@ -37,7 +41,7 @@ namespace StrongApi
             var oldEntity = FindEntityById(id);
             if (oldEntity == null)
                 return NotFound();
-            ReplaceEntityData(ref oldEntity, dto);
+            Merge(dto, ref oldEntity);
             return Ok();
         }
         public IHttpActionResult Delete(TId id)
@@ -51,26 +55,26 @@ namespace StrongApi
 
         protected virtual TDto MapToDto(TEntity entity)
         {
-            Mapper.CreateMap<TEntity, TDto>();
             return Mapper.Map<TDto>(entity);
         }
 
         protected virtual TEntity MapToEntity(TDto dto)
         {
-            Mapper.CreateMap<TDto, TEntity>();
             return Mapper.Map<TEntity>(dto);
         }
-        private Uri GetLocation(TEntity entity)
+        protected virtual Uri GetLocation(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (Request == null) 
+                return new Uri("http://localhost/");
+            return new Uri(Request.RequestUri.AbsoluteUri + "?id=" + entity.GetId());
         }
         private TEntity FindEntityById(TId id)
         {
-            return Collection.SingleOrDefault(x => id.Equals(x.ExtractIdValue()));
+            return Collection.SingleOrDefault(x => id.Equals(x.GetId()));
         }
-        private void ReplaceEntityData(ref TEntity oldEntity, TDto dto)
+        private void Merge(TDto dto, ref TEntity entity)
         {
-            throw new NotImplementedException();
+            Mapper.Map(dto, entity);
         }
     }
 }
