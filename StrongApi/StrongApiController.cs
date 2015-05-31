@@ -13,11 +13,10 @@ namespace StrongApi
     public class StrongApiController<TId, TDto, TEntity, TQueryDescriptor> : ApiController where TDto : new()
     {
         protected readonly ICollection<TEntity> Collection;
+        private bool _mappingDefined = false;
 
         public StrongApiController(ICollection<TEntity> collection)
         {
-            Mapper.CreateMap<TEntity, TDto>();
-            Mapper.CreateMap<TDto, TEntity>();
             Collection = collection;
         }
 
@@ -53,16 +52,37 @@ namespace StrongApi
             return Ok();
         }
 
-        protected virtual TDto MapToDto(TEntity entity)
+        protected virtual void DefineMappings()
         {
-            return Mapper.Map<TDto>(entity);
+            Mapper.CreateMap<TEntity, TDto>();
+            Mapper.CreateMap<TDto, TEntity>();
         }
 
-        protected virtual TEntity MapToEntity(TDto dto)
+        private void TryCreateMappings()
         {
+            if (!_mappingDefined)
+            {
+                DefineMappings();
+                _mappingDefined = true;
+            }
+        }
+
+        private TDto MapToDto(TEntity entity)
+        {
+            TryCreateMappings();
+            return Mapper.Map<TDto>(entity);
+        }
+        private TEntity MapToEntity(TDto dto)
+        {
+            TryCreateMappings();
             return Mapper.Map<TEntity>(dto);
         }
-        protected virtual Uri GetLocation(TEntity entity)
+        private void Merge(TDto dto, ref TEntity entity)
+        {
+            TryCreateMappings();
+            Mapper.Map(dto, entity);
+        }
+        private Uri GetLocation(TEntity entity)
         {
             if (Request == null) 
                 return new Uri("http://localhost/");
@@ -71,10 +91,6 @@ namespace StrongApi
         private TEntity FindEntityById(TId id)
         {
             return Collection.SingleOrDefault(x => id.Equals(x.GetId()));
-        }
-        private void Merge(TDto dto, ref TEntity entity)
-        {
-            Mapper.Map(dto, entity);
         }
     }
 }

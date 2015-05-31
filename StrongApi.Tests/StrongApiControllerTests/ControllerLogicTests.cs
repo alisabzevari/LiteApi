@@ -67,5 +67,16 @@ namespace StrongApi.Tests.StrongApiControllerTests
             var result = _controller.Put(100, new PersonDto()) as NotFoundResult;
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void Delete_must_remove_object_from_collection_and_return_ok()
+        {
+            var result = _controller.Delete(1) as OkResult;
+            var getResult = _controller.Get(1) as NotFoundResult;
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(getResult);
+            Assert.IsTrue(_persons.All(p => p.Id != 1));
+        }
     }
 }
