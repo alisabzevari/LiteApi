@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
 using System.Web.Http;
 using NHibernate;
 using NHibernate.Linq;
@@ -12,7 +11,7 @@ using NHibernate.Linq;
 //TODO: implement GetLocation
 //TODO: implement MapToEntity
 
-namespace StrongApi
+namespace StrongApi.NHibernate
 {
     public class NhStrongApiController<TDto, TEntity, TQueryDescriptor> : NhApiController
     {
