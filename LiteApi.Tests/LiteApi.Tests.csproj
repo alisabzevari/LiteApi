@@ -7,8 +7,8 @@
     <ProjectGuid>{94DA2823-1FAF-4405-AEE8-11866695AD36}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StrongApi.Tests</RootNamespace>
-    <AssemblyName>StrongApi.Tests</AssemblyName>
+    <RootNamespace>LiteApi.Tests</RootNamespace>
+    <AssemblyName>LiteApi.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>51cd128e</NuGetPackageImportStamp>
@@ -76,10 +76,10 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="StrongApiControllerTests\ControllerLogicTests.cs" />
-    <Compile Include="StrongApiControllerTests\PersonController.cs" />
-    <Compile Include="StrongApiControllerTests\QueryTests.cs" />
-    <Compile Include="StrongApiControllerTests\RoutingTests.cs" />
+    <Compile Include="LiteApiControllerTests\ControllerLogicTests.cs" />
+    <Compile Include="LiteApiControllerTests\PersonController.cs" />
+    <Compile Include="LiteApiControllerTests\QueryTests.cs" />
+    <Compile Include="LiteApiControllerTests\RoutingTests.cs" />
     <Compile Include="WebApiTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +87,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StrongApi\StrongApi.csproj">
+    <ProjectReference Include="..\LiteApi\LiteApi.csproj">
       <Project>{9e19d0c0-5e72-4c31-a50f-328f33c5e4ee}</Project>
-      <Name>StrongApi</Name>
+      <Name>LiteApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

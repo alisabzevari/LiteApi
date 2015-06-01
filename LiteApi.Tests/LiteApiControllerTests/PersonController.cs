@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace StrongApi.Tests.StrongApiControllerTests
+namespace LiteApi.Tests.LiteApiControllerTests
 {
     [RoutePrefix("api/person")]
-    public class PersonController : StrongApiController<int, PersonDto, Person, PersonDtoQueryDescriptor>
+    public class PersonController : LiteApiController<int, PersonDto, Person, PersonDtoQueryDescriptor>
     {
         public PersonController()
             : base(Person.Seed())

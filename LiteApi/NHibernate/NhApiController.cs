@@ -2,7 +2,7 @@
 using System.Web.Http;
 using NHibernate;
 
-namespace StrongApi.NHibernate
+namespace LiteApi.NHibernate
 {
     public class NhApiController : ApiController
     {

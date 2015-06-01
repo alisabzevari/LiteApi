@@ -11,11 +11,11 @@ using NHibernate.Linq;
 //TODO: implement GetLocation
 //TODO: implement MapToEntity
 
-namespace StrongApi.NHibernate
+namespace LiteApi.NHibernate
 {
-    public class NhStrongApiController<TDto, TEntity, TQueryDescriptor> : NhApiController
+    public class NhLiteApiController<TDto, TEntity, TQueryDescriptor> : NhApiController
     {
-        public NhStrongApiController(ISession session)
+        public NhLiteApiController(ISession session)
             : base(session)
         { }
 

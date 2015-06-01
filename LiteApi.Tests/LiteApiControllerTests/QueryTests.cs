@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace StrongApi.Tests.StrongApiControllerTests
+namespace LiteApi.Tests.LiteApiControllerTests
 {
     [TestClass]
     public class QueryTests

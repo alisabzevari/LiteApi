@@ -8,7 +8,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace StrongApi.Tests.StrongApiControllerTests
+namespace LiteApi.Tests.LiteApiControllerTests
 {
     [TestClass]
     public class ControllerLogicTests

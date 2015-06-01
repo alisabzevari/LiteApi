@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrongApi
+namespace LiteApi
 {
     //TODO: use [Key] attribute to find Id
     internal static class EntityExtensions

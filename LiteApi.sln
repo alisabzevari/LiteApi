@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrongApi", "StrongApi\StrongApi.csproj", "{9E19D0C0-5E72-4C31-A50F-328F33C5E4EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteApi", "LiteApi\LiteApi.csproj", "{9E19D0C0-5E72-4C31-A50F-328F33C5E4EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrongApi.Tests", "StrongApi.Tests\StrongApi.Tests.csproj", "{94DA2823-1FAF-4405-AEE8-11866695AD36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteApi.Tests", "LiteApi.Tests\LiteApi.Tests.csproj", "{94DA2823-1FAF-4405-AEE8-11866695AD36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

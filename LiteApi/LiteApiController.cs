@@ -5,14 +5,14 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using AutoMapper;
 
-namespace StrongApi
+namespace LiteApi
 {
-    public class StrongApiController<TId, TDto, TEntity, TQueryDescriptor> : ApiController where TDto : new()
+    public class LiteApiController<TId, TDto, TEntity, TQueryDescriptor> : ApiController where TDto : new()
     {
         protected readonly ICollection<TEntity> Collection;
         private bool _mappingDefined;
 
-        public StrongApiController(ICollection<TEntity> collection)
+        public LiteApiController(ICollection<TEntity> collection)
         {
             Collection = collection;
         }

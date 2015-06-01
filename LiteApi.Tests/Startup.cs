@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Owin;
 
-namespace StrongApi.Tests
+namespace LiteApi.Tests
 {
     public class Startup
     {

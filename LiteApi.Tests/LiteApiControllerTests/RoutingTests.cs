@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace StrongApi.Tests.StrongApiControllerTests
+namespace LiteApi.Tests.LiteApiControllerTests
 {
     [TestClass]
     public class RoutingTests : WebApiTestBase

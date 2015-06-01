@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin.Testing;
 
-namespace StrongApi.Tests
+namespace LiteApi.Tests
 {
     public class WebApiTestBase
     {
