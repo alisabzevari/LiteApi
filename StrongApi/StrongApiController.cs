@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using System.Web.Http;
-using System.Web.Http.Routing;
 using AutoMapper;
-using NHibernate.Mapping;
 
 namespace StrongApi
 {
     public class StrongApiController<TId, TDto, TEntity, TQueryDescriptor> : ApiController where TDto : new()
     {
         protected readonly ICollection<TEntity> Collection;
-        private bool _mappingDefined = false;
+        private bool _mappingDefined;
 
         public StrongApiController(ICollection<TEntity> collection)
         {
             Collection = collection;
         }
+
+        public virtual IHttpActionResult Get([FromUri] TQueryDescriptor queryDescriptor)
+        {
+            var queryable = Collection.AsQueryable();
+            var result = PerformQuery(queryable, queryDescriptor);
+            return Ok(result.Select(MapToDto));
+        }
+
         public virtual IHttpActionResult Get([FromUri] TId id)
         {
             var entity = FindEntityById(id);
@@ -78,13 +83,20 @@ namespace StrongApi
         }
         private Uri GetLocation(TEntity entity)
         {
+#if DEBUG
+            // just to make my tests work!
             if (Request == null) 
                 return new Uri("http://localhost/");
+#endif
             return new Uri(Request.RequestUri.AbsoluteUri + "?id=" + entity.GetId());
         }
         private TEntity FindEntityById(TId id)
         {
             return Collection.SingleOrDefault(x => id.Equals(x.GetId()));
+        }
+        private IEnumerable<TEntity> PerformQuery(IQueryable<TEntity> queryable, TQueryDescriptor queryDescriptor)
+        {
+            throw new NotImplementedException();
         }
     }
 }

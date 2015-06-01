@@ -26,5 +26,13 @@ namespace StrongApi.Tests.StrongApiControllerTests
         {
             Get("http://localhost/api/person?id=0", message => Assert.AreEqual(HttpStatusCode.OK, message.StatusCode));
         }
+
+        //[TestMethod]
+        //public void Get_with_a_query()
+        //{
+        //    Get("http://localhost/api/person?FirstName=ali");
+        //    Get("http://localhost/api/person?Id_Gt=2");
+        //    Get("http://localhost/api/person?Id_Gt=2&Skip=2&Take=10&OrderBy=FirstName,LastName");
+        //}
     }
 }

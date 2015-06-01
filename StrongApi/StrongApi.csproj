@@ -78,6 +78,7 @@
     <Compile Include="NHibernate\NhApiController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NHibernate\NhStrongApiController.cs" />
+    <Compile Include="QueryBuilder.cs" />
     <Compile Include="StrongApiController.cs" />
   </ItemGroup>
   <ItemGroup>

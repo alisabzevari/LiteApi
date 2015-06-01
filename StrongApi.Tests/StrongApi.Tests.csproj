@@ -78,6 +78,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="StrongApiControllerTests\ControllerLogicTests.cs" />
     <Compile Include="StrongApiControllerTests\PersonController.cs" />
+    <Compile Include="StrongApiControllerTests\QueryTests.cs" />
     <Compile Include="StrongApiControllerTests\RoutingTests.cs" />
     <Compile Include="WebApiTestBase.cs" />
   </ItemGroup>
