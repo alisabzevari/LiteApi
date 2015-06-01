@@ -21,7 +21,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         }
 
         [TestMethod]
-        public void OrderBy_in_QueryDescriptor_must_translated_to_LINQ_OrderBy_and_return_ordered_results()
+        public void OrderBy_one_property()
         {
             var queryDescriptor = new PersonDtoQueryDescriptor() { OrderBy = new[] { "FirstName" } };
             var result = _controller.Get(queryDescriptor) as OkNegotiatedContentResult<IEnumerable<PersonDto>>;
@@ -31,7 +31,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         }
 
         [TestMethod]
-        public void OrderBy_two_properties_in_QueryDescriptor_must_translated_to_LINQ_OrderBy_and_return_ordered_results()
+        public void OrderBy_two_properties()
         {
             var queryDescriptor = new PersonDtoQueryDescriptor() { OrderBy = new[] { "FirstName", "LastName" } };
             var result = _controller.Get(queryDescriptor) as OkNegotiatedContentResult<IEnumerable<PersonDto>>;
@@ -39,6 +39,16 @@ namespace LiteApi.Tests.LiteApiControllerTests
             var items = result.Content.ToList();
             Assert.IsTrue(items[1].FirstName == "F2");
             Assert.IsTrue(items[3].LastName == "L3");
+        }
+
+        [TestMethod]
+        public void Where_property_equals_value()
+        {
+            var qd = new PersonDtoQueryDescriptor() {FirstName = "F4"};
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IEnumerable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.AreEqual(2, items.Count);
         }
     }
 }
