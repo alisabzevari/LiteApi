@@ -32,6 +32,19 @@ namespace LiteApi
                 );
             return orderByExpr;
         }
+        private Expression AddOrderByDesc(string fieldName, Expression rootExpression)
+        {
+            var itemExpr = Expression.Parameter(typeof(TEntity), "entity");
+            var propertyToOrderByExpr = Expression.Property(itemExpr, fieldName);
+            var orderByExpr = Expression.Call(
+                typeof(Queryable),
+                "OrderByDesc",
+                new[] { _collection.ElementType, typeof(IComparable) },
+                rootExpression,
+                Expression.Lambda<Func<TEntity, IComparable>>(propertyToOrderByExpr, new ParameterExpression[] { itemExpr })
+                );
+            return orderByExpr;
+        }
 
         public IQueryable<TEntity> Execute()
         {
@@ -45,27 +58,41 @@ namespace LiteApi
             var props = _queryDescriptor.GetType().GetProperties();
             foreach (var prop in props)
             {
-                _masterExpression = BuildExpressionBasedOnQueryDescriptorPeroperty(prop, _masterExpression);
+                _masterExpression = AddExpressionBasedOnQueryDescriptorPeroperty(prop, _masterExpression);
             }
         }
 
-        private Expression BuildExpressionBasedOnQueryDescriptorPeroperty(System.Reflection.PropertyInfo prop, Expression rootExpression)
+        private Expression AddExpressionBasedOnQueryDescriptorPeroperty(System.Reflection.PropertyInfo prop, Expression rootExpression)
         {
             if (prop.Name == "OrderBy" && prop.PropertyType == typeof(string[]))
             {
                 return AddAllOrderBys((string[]) prop.GetValue(_queryDescriptor), rootExpression);
             }
+            if (prop.Name == "OrderByDesc" && prop.PropertyType == typeof (string[]))
+            {
+                return AddAllOrderByDescs((string[]) prop.GetValue(_queryDescriptor), rootExpression);
+            }
             return rootExpression;
+        }
+
+        private Expression AddAllOrderByDescs(string[] orderByFields, Expression rootExpression)
+        {
+            Expression allOrderByDescsExpr = rootExpression;
+            foreach (var field in orderByFields)
+            {
+                allOrderByDescsExpr = AddOrderByDesc(field, allOrderByDescsExpr);
+            }
+            return allOrderByDescsExpr;
         }
 
         private Expression AddAllOrderBys(string[] orderByFields, Expression rootExpression)
         {
-            Expression AllOrderBysExpr = rootExpression;
+            Expression allOrderBysExpr = rootExpression;
             foreach (var field in orderByFields)
             {
-                AllOrderBysExpr = AddOrderBy(field, AllOrderBysExpr);
+                allOrderBysExpr = AddOrderBy(field, allOrderBysExpr);
             }
-            return AllOrderBysExpr;
+            return allOrderBysExpr;
         }
     }
 }
