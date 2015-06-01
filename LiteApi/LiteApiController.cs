@@ -96,7 +96,8 @@ namespace LiteApi
         }
         private IEnumerable<TEntity> PerformQuery(IQueryable<TEntity> queryable, TQueryDescriptor queryDescriptor)
         {
-            throw new NotImplementedException();
+            var qb = new QueryBuilder<TEntity, TQueryDescriptor>(queryable, queryDescriptor);
+            return qb.Execute();
         }
     }
 }

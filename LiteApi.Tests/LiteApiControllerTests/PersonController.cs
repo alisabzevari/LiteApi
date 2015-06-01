@@ -30,9 +30,10 @@ namespace LiteApi.Tests.LiteApiControllerTests
             return new List<Person>()
             {
                 new Person {Id = 0, FirstName = "F1", LastName = "L1", IsAdmin = true},
-                new Person {Id = 1, FirstName = "F3", LastName = "L2", IsAdmin = false},
-                new Person {Id = 2, FirstName = "F2", LastName = "L3", IsAdmin = true},
+                new Person {Id = 1, FirstName = "F3", LastName = "L3", IsAdmin = false},
+                new Person {Id = 2, FirstName = "F2", LastName = "L2", IsAdmin = true},
                 new Person {Id = 3, FirstName = "F4", LastName = "L4", IsAdmin = false},
+                new Person {Id = 4, FirstName = "F4", LastName = "L3", IsAdmin = false},
             };
         }
     }
