@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="NHibernate\NhApiController.cs" />
+    <Compile Include="Op.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NHibernate\NhLiteApiController.cs" />
     <Compile Include="QueryBuilder.cs" />

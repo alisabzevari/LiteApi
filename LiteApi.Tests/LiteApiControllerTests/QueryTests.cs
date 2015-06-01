@@ -44,7 +44,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         [TestMethod]
         public void Where_property_equals_value()
         {
-            var qd = new PersonDtoQueryDescriptor() {FirstName = "F4"};
+            var qd = new PersonDtoQueryDescriptor() { FirstName = "F4" };
             var result = _controller.Get(qd) as OkNegotiatedContentResult<IEnumerable<PersonDto>>;
             Assert.IsNotNull(result);
             var items = result.Content.ToList();
