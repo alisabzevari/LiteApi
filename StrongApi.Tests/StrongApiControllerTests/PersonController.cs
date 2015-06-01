@@ -46,6 +46,16 @@ namespace StrongApi.Tests.StrongApiControllerTests
 
     public class PersonDtoQueryDescriptor
     {
-        public string FirstNameContains { get; set; }
+        public string FirstName { get; set; }
+        public string FirstName_Contains { get; set; }
+        public int Id_Gt { get; set; }
+        public int Id_Ge { get; set; }
+        public int Id_Lt { get; set; }
+        public int Id_Le { get; set; }
+        public int Id_Ne { get; set; }
+        public string[] OrderBy { get; set; }
+        public string[] OrderByDesc { get; set; }
+        public int Take { get; set; }
+        public int Skip { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace StrongApi
 {
+    //TODO: use [Key] attribute to find Id
     internal static class EntityExtensions
     {
         public static object GetId(this object obj)

@@ -19,7 +19,6 @@ namespace StrongApi
         {
             Collection = collection;
         }
-
         public virtual IHttpActionResult Get([FromUri] TId id)
         {
             var entity = FindEntityById(id);
@@ -27,14 +26,12 @@ namespace StrongApi
                 return NotFound();
             return Ok(MapToDto(entity));
         }
-
         public virtual IHttpActionResult Post(TDto dto)
         {
             var entity = MapToEntity(dto);
             Collection.Add(entity);
             return Created(GetLocation(entity), MapToDto(entity));
         }
-
         public IHttpActionResult Put(TId id, [FromBody] TDto dto)
         {
             var oldEntity = FindEntityById(id);
@@ -51,13 +48,11 @@ namespace StrongApi
             Collection.Remove(entity);
             return Ok();
         }
-
         protected virtual void DefineMappings()
         {
             Mapper.CreateMap<TEntity, TDto>();
             Mapper.CreateMap<TDto, TEntity>();
         }
-
         private void TryCreateMappings()
         {
             if (!_mappingDefined)
@@ -66,7 +61,6 @@ namespace StrongApi
                 _mappingDefined = true;
             }
         }
-
         private TDto MapToDto(TEntity entity)
         {
             TryCreateMappings();
