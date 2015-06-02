@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq.Dynamic;
 
 namespace LiteApi.Tests.LiteApiControllerTests
 {
@@ -81,6 +82,14 @@ namespace LiteApi.Tests.LiteApiControllerTests
             var items = result.Content.ToList();
             Assert.AreEqual(2, items.Count);
             Assert.AreEqual(1, items[0].Id);
+        }
+
+        [TestMethod]
+        public void DynamicLinqTest()
+        {
+            IQueryable list = _persons.AsQueryable();
+            var result = list.Where("Id == @0", 2);
+            Assert.AreEqual(1, result.Count());
         }
     }
 }
