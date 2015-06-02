@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 
 namespace LiteApi
 {
-    public static class Op
+    public enum Op
     {
-        public static string LessThan = "Lt";
-        public static string LessThanOrEqual = "Le";
-        public static string GreaterThan = "Gt";
-        public static string GreaterThanOrEqual = "Ge";
-        public static string NotEqual = "Ne";
-        public static string Equal = "Eq";
+        Lt,
+        Le,
+        Gt,
+        Ge,
+        Ne,
+        Eq
     }
+
+    //public static class Oper
+    //{
+    //    public static string LessThan = "Lt";
+    //    public static string LessThanOrEqual = "Le";
+    //    public static string GreaterThan = "Gt";
+    //    public static string GreaterThanOrEqual = "Ge";
+    //    public static string NotEqual = "Ne";
+    //    public static string Equal = "Eq";
+    //}
 }

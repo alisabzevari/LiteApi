@@ -50,5 +50,37 @@ namespace LiteApi.Tests.LiteApiControllerTests
             var items = result.Content.ToList();
             Assert.AreEqual(2, items.Count);
         }
+
+        [TestMethod]
+        public void Where_property_greater_than_value()
+        {
+            var qd = new PersonDtoQueryDescriptor() { Id_Gt = 2 };
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IEnumerable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.AreEqual(2, items.Count);
+        }
+
+        [TestMethod]
+        public void Where_property_Gt_and_Le_together()
+        {
+            var qd = new PersonDtoQueryDescriptor() { Id_Gt = 2, Id_Le = 3};
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IEnumerable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.AreEqual(1, items.Count);
+            Assert.AreEqual(3, items[0].Id);
+        }
+
+        [TestMethod]
+        public void Skip_and_Take()
+        {
+            var qd = new PersonDtoQueryDescriptor() { Skip = 1, Take = 2};
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IEnumerable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.AreEqual(2, items.Count);
+            Assert.AreEqual(1, items[0].Id);
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace LiteApi
         {
             _queryDescriptor = queryDescriptor;
             _collection = collection;
-            _entityProperties = typeof (TEntity).GetProperties();
+            _entityProperties = typeof(TEntity).GetProperties();
         }
 
         public IQueryable<TEntity> Execute()
@@ -34,28 +34,129 @@ namespace LiteApi
             var props = _queryDescriptor.GetType().GetProperties();
             foreach (var prop in props)
             {
-                _masterExpression = AddExpressionBasedOnQueryDescriptorPeroperty(prop, _masterExpression);
+                _masterExpression = AddWhereExpressions(prop, _masterExpression);
             }
+            _masterExpression = AddOrderExpressions(props, _masterExpression);
+            _masterExpression = AddPagingExpressions(props, _masterExpression);
         }
 
-        private Expression AddExpressionBasedOnQueryDescriptorPeroperty(System.Reflection.PropertyInfo prop, Expression rootExpression)
+        private Expression AddWhereExpressions(System.Reflection.PropertyInfo prop, Expression rootExpression)
         {
             var propValue = prop.GetValue(_queryDescriptor);
             if (propValue == null)
                 return rootExpression;
-            if (prop.Name == "OrderBy" && prop.PropertyType == typeof(string[]))
-            {
-                return AddAllOrderBys((string[]) propValue, rootExpression);
-            }
-            if (prop.Name == "OrderByDesc" && prop.PropertyType == typeof(string[]))
-            {
-                return AddAllOrderByDescs((string[])propValue, rootExpression);
-            }
-            if (_entityProperties.Select(p => p.Name).Any(p => p == prop.Name))
+            if (IsAPropertyOfEntity(prop.Name))
             {
                 return AddWhereEquals(prop.Name, propValue, rootExpression);
             }
+            var parts = prop.Name.Split('_');
+            if (parts.Length >= 2)
+            {
+                if (parts.Length == 2)
+                {
+                    if (IsAPropertyOfEntity(parts[0]))
+                        return AddWhereWithOperator(parts[0], (Op)Enum.Parse(typeof(Op), parts[1]), propValue, rootExpression);
+                }
+            }
             return rootExpression;
+        }
+        private Expression AddOrderExpressions(PropertyInfo[] props, Expression rootExpression)
+        {
+            var orderByProp = props.SingleOrDefault(prop => prop.Name == "OrderBy" && prop.PropertyType == typeof(string[]));
+            if (orderByProp != null)
+            {
+                var orderByValue = orderByProp.GetValue(_queryDescriptor);
+                if (orderByValue != null)
+                    rootExpression = AddAllOrderBys((string[])orderByValue, rootExpression);
+            }
+            var orderByDescProp = props.SingleOrDefault(prop => prop.Name == "OrderByDesc" && prop.PropertyType == typeof(string[]));
+            if (orderByDescProp != null)
+            {
+                var orderByDescValue = orderByDescProp.GetValue(_queryDescriptor);
+                if (orderByDescValue != null)
+                    rootExpression = AddAllOrderByDescs((string[])orderByDescValue, rootExpression);
+            }
+            return rootExpression;
+        }
+        private Expression AddPagingExpressions(PropertyInfo[] props, Expression rootExpression)
+        {
+            var skipProp = props.SingleOrDefault(prop => prop.Name == "Skip" && prop.PropertyType == typeof(int?));
+            if (skipProp != null)
+            {
+                var skipValue = (int?)skipProp.GetValue(_queryDescriptor);
+                if (skipValue.HasValue)
+                    rootExpression = AddSkip(skipValue.Value, rootExpression);
+            }
+
+            var takeProp = props.SingleOrDefault(prop => prop.Name == "Take" && prop.PropertyType == typeof(int?));
+            if (takeProp != null)
+            {
+                var takeValue = (int?)takeProp.GetValue(_queryDescriptor);
+                if (takeValue.HasValue)
+                    rootExpression = AddTake(takeValue.Value, rootExpression);
+            }
+
+            return rootExpression;
+        }
+
+
+        private Expression AddSkip(int skipCount, Expression rootExpression)
+        {
+            var skipExpr = Expression.Call(
+                typeof(Queryable),
+                "Skip",
+                new[] { _collection.ElementType },
+                rootExpression,
+                Expression.Constant(skipCount));
+            return skipExpr;
+        }
+        private Expression AddTake(int takeCount, Expression rootExpression)
+        {
+            var takeExpr = Expression.Call(
+                typeof(Queryable),
+                "Take",
+                new[] { _collection.ElementType },
+                rootExpression,
+                Expression.Constant(takeCount));
+            return takeExpr;
+        }
+        private Expression AddWhereWithOperator(string fieldName, Op op, object referenceValue, Expression rootExpression)
+        {
+            var itemExpr = Expression.Parameter(typeof(TEntity), "entity");
+            var left = Expression.Property(itemExpr, fieldName);
+            var right = Expression.Constant(referenceValue);
+            Expression operationExpr;
+            switch (op)
+            {
+                case Op.Lt:
+                    operationExpr = Expression.LessThan(left, right);
+                    break;
+                case Op.Le:
+                    operationExpr = Expression.LessThanOrEqual(left, right);
+                    break;
+                case Op.Gt:
+                    operationExpr = Expression.GreaterThan(left, right);
+                    break;
+                case Op.Ge:
+                    operationExpr = Expression.GreaterThanOrEqual(left, right);
+                    break;
+                case Op.Ne:
+                    operationExpr = Expression.NotEqual(left, right);
+                    break;
+                case Op.Eq:
+                    operationExpr = Expression.Equal(left, right);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("op");
+            }
+            var whereExpr = Expression.Call(
+                typeof(Queryable),
+                "Where",
+                new[] { _collection.ElementType },
+                rootExpression,
+                Expression.Lambda<Func<TEntity, bool>>(operationExpr, new ParameterExpression[] { itemExpr })
+                );
+            return whereExpr;
         }
 
         private Expression AddWhereEquals(string fieldName, object referenceValue, Expression rootExpression)
@@ -120,6 +221,10 @@ namespace LiteApi
                 allOrderBysExpr = AddOrderBy(field, allOrderBysExpr);
             }
             return allOrderBysExpr;
+        }
+        private bool IsAPropertyOfEntity(string propertyName)
+        {
+            return _entityProperties.Select(p => p.Name).Any(p => p == propertyName);
         }
     }
 }
