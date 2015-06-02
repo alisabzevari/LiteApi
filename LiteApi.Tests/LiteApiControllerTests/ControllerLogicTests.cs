@@ -19,7 +19,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public ControllerLogicTests()
         {
             _persons = Person.Seed();
-            _controller = new PersonController(_persons);
+            _controller = new PersonController(new InMemoryCollectionPersistenceService<Person>(_persons));
         }
 
         [TestMethod]

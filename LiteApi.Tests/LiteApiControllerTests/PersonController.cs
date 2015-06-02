@@ -11,9 +11,9 @@ namespace LiteApi.Tests.LiteApiControllerTests
     public class PersonController : LiteApiController<int, PersonDto, Person, PersonDtoQueryDescriptor>
     {
         public PersonController()
-            : base(Person.Seed())
+            : base(new InMemoryCollectionPersistenceService<Person>(Person.Seed()))
         { }
-        public PersonController(ICollection<Person> collection)
+        public PersonController(IPersistenceService collection)
             : base(collection)
         { }
     }

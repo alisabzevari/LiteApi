@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteApi", "LiteApi\LiteApi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteApi.Tests", "LiteApi.Tests\LiteApi.Tests.csproj", "{94DA2823-1FAF-4405-AEE8-11866695AD36}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteApi.NHibernate", "LiteApi.NHibernate\LiteApi.NHibernate.csproj", "{F9701F5A-5D81-491C-BE5D-04F138514EFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{94DA2823-1FAF-4405-AEE8-11866695AD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94DA2823-1FAF-4405-AEE8-11866695AD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94DA2823-1FAF-4405-AEE8-11866695AD36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9701F5A-5D81-491C-BE5D-04F138514EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9701F5A-5D81-491C-BE5D-04F138514EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9701F5A-5D81-491C-BE5D-04F138514EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9701F5A-5D81-491C-BE5D-04F138514EFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

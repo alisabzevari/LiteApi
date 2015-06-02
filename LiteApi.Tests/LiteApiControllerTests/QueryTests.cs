@@ -18,7 +18,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public QueryTests()
         {
             _persons = Person.Seed();
-            _controller = new PersonController(_persons);
+            _controller = new PersonController(new InMemoryCollectionPersistenceService<Person>(_persons));
         }
 
         [TestMethod]
