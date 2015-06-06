@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Linq.Dynamic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,14 +31,30 @@ namespace LiteApi
 
         private void BuildMasterExpression()
         {
-            _masterExpression = _collection.Expression;
+            var collection = _collection as IQueryable;
             var props = _queryDescriptor.GetType().GetProperties();
             foreach (var prop in props)
             {
-                _masterExpression = AddWhereExpressions(prop, _masterExpression);
+                var attr = prop.GetCustomAttribute<WhereAttribute>();
+                var value = prop.GetValue(_queryDescriptor);
+                if (attr != null && value != null)
+                    collection = AddDynamicWhere(prop, collection);
+            }
+            _masterExpression = collection.Expression;
+            foreach (var prop in props)
+            {
+                var attr = prop.GetCustomAttribute<WhereAttribute>();
+                if (attr == null)
+                    _masterExpression = AddWhereExpressions(prop, _masterExpression);
             }
             _masterExpression = AddOrderExpressions(props, _masterExpression);
             _masterExpression = AddPagingExpressions(props, _masterExpression);
+        }
+
+        private IQueryable AddDynamicWhere(PropertyInfo prop, IQueryable queryable)
+        {
+            var whereClause = prop.GetCustomAttribute<WhereAttribute>().WhereClause;
+            return queryable.Where(whereClause);
         }
 
         private Expression AddWhereExpressions(System.Reflection.PropertyInfo prop, Expression rootExpression)

@@ -24,16 +24,17 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool IsAdmin { get; set; }
+        public int Age { get; set; }
 
         public static ICollection<Person> Seed()
         {
             return new List<Person>()
             {
-                new Person {Id = 0, FirstName = "F1", LastName = "L1", IsAdmin = true},
-                new Person {Id = 1, FirstName = "F3", LastName = "L3", IsAdmin = false},
-                new Person {Id = 2, FirstName = "F2", LastName = "L2", IsAdmin = true},
-                new Person {Id = 3, FirstName = "F4", LastName = "L4", IsAdmin = false},
-                new Person {Id = 4, FirstName = "F4", LastName = "L3", IsAdmin = false},
+                new Person {Id = 0, FirstName = "F1", LastName = "L1", IsAdmin = true, Age = 18},
+                new Person {Id = 1, FirstName = "F3", LastName = "L3", IsAdmin = false, Age = 81},
+                new Person {Id = 2, FirstName = "F2", LastName = "L2", IsAdmin = true, Age = 50},
+                new Person {Id = 3, FirstName = "F4", LastName = "L4", IsAdmin = false, Age = 40},
+                new Person {Id = 4, FirstName = "F4", LastName = "L3", IsAdmin = false, Age = 35},
             };
         }
     }
@@ -43,6 +44,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int? Age { get; set; }
     }
 
     public class PersonDtoQueryDescriptor
@@ -58,5 +60,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public string[] OrderByDesc { get; set; }
         public int? Take { get; set; }
         public int? Skip { get; set; }
+        [Where("Age >= 50")]
+        public string OldPersons { get; set; }
     }
 }
