@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace LiteApi
 {
@@ -17,13 +18,14 @@ namespace LiteApi
         public LiteApiController(IPersistenceService persistenceService)
         {
             PersistenceService = persistenceService;
+            TryCreateMappings();
         }
 
         public virtual IHttpActionResult Get([FromUri] TQueryDescriptor queryDescriptor)
         {
             var queryable = PersistenceService.Query<TEntity>();
             var result = PerformQuery(queryable, queryDescriptor);
-            return Ok(result.Select(MapToDto));
+            return Ok(result.Project().To<TDto>());
         }
 
         public virtual IHttpActionResult Get([FromUri] TId id)
@@ -93,7 +95,7 @@ namespace LiteApi
 #endif
             return new Uri(Request.RequestUri.AbsoluteUri + "?id=" + entity.GetId());
         }
-        private IEnumerable<TEntity> PerformQuery(IQueryable<TEntity> queryable, TQueryDescriptor queryDescriptor)
+        private IQueryable<TEntity> PerformQuery(IQueryable<TEntity> queryable, TQueryDescriptor queryDescriptor)
         {
             var qb = new QueryBuilder<TEntity, TQueryDescriptor>(queryable, queryDescriptor);
             return qb.Execute();
