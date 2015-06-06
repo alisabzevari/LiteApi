@@ -54,6 +54,21 @@ namespace LiteApi
         private IQueryable AddDynamicWhere(PropertyInfo prop, IQueryable queryable)
         {
             var whereClause = prop.GetCustomAttribute<WhereAttribute>().WhereClause;
+            if (whereClause.Contains("@"))
+            {
+                if (prop.PropertyType.IsArray)
+                {
+                    var arr = prop.GetValue(_queryDescriptor) as Array;
+                    var parameters = new object[arr.Length];
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        parameters[i] = arr.GetValue(i);
+                    }
+                    return queryable.Where(whereClause, parameters);
+                }
+                return queryable.Where(whereClause, prop.GetValue(_queryDescriptor));
+            }
+
             return queryable.Where(whereClause);
         }
 

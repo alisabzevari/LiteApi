@@ -62,5 +62,9 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public int? Skip { get; set; }
         [Where("Age >= 50")]
         public string OldPersons { get; set; }
+        [Where("Age >= @0")]
+        public int? OlderThan { get; set; }
+        [Where("@0 <= Age && Age <= @1")]
+        public int[] AgeBetween { get; set; }
     }
 }

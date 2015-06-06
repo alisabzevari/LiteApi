@@ -103,13 +103,33 @@ namespace LiteApi.Tests.LiteApiControllerTests
         }
 
         [TestMethod]
-        public void CustomeWhereClause_must_be_ignored_when_value_of_property_is_null()
+        public void CustomWhereClause_must_be_ignored_when_value_of_property_is_null()
         {
             var qd = new PersonDtoQueryDescriptor();
             var result = _controller.Get(qd) as OkNegotiatedContentResult<IQueryable<PersonDto>>;
             Assert.IsNotNull(result);
             var items = result.Content.ToList();
             Assert.AreEqual(5, items.Count);
+        }
+
+        [TestMethod]
+        public void CustomWhereClause_with_one_parameter()
+        {
+            var qd = new PersonDtoQueryDescriptor() { OlderThan = 50 };
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IQueryable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.AreEqual(2, items.Count);
+        }
+
+        [TestMethod]
+        public void CustomWhereClause_whith_multiple_value_parameter()
+        {
+            var qd = new PersonDtoQueryDescriptor() { AgeBetween = new[] { 0, 50 } };
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IQueryable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.AreEqual(4, items.Count);
         }
     }
 }
