@@ -25,7 +25,6 @@ namespace LiteApi.Tests
             Assert.AreEqual(1, obj.GetId());
         }
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
         public void GetId_must_not_find_property_with_name_ID()
         {
             Exception expectedException = null;
