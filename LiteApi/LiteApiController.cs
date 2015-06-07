@@ -37,12 +37,16 @@ namespace LiteApi
         }
         public virtual IHttpActionResult Post(TDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var entity = MapToEntity(dto);
             PersistenceService.Add(entity);
             return Created(GetLocation(entity), MapToDto(entity));
         }
         public IHttpActionResult Put(TId id, [FromBody] TDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var oldEntity = PersistenceService.GetById<TEntity>(id);
             if (oldEntity == null)
                 return NotFound();
