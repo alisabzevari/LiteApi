@@ -42,7 +42,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         [TestMethod]
         public void Post_must_add_a_person_to_collection_and_return_created_with_its_route()
         {
-            var untypedResult = _controller.Post(new PersonDto() { FirstName = "FirstName1", LastName = "LastName1" });
+            var untypedResult = _controller.Post(new PersonDto() { FirstName = "FirstName1", FamilyName = "LastName1" });
             var result = untypedResult as CreatedNegotiatedContentResult<PersonDto>;
             Assert.IsNotNull(result);
             Assert.AreEqual("FirstName1", result.Content.FirstName);

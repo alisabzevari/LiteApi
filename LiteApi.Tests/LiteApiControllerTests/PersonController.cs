@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 
 namespace LiteApi.Tests.LiteApiControllerTests
 {
@@ -16,6 +17,14 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public PersonController(IPersistenceService collection)
             : base(collection)
         { }
+
+        protected override void DefineMappings()
+        {
+            Mapper.CreateMap<PersonDto, Person>()
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.FamilyName));
+            Mapper.CreateMap<Person, PersonDto>()
+                .ForMember(dest => dest.FamilyName, opt => opt.MapFrom(src => src.LastName));
+        }
     }
 
     public class Person
@@ -43,7 +52,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string FamilyName { get; set; }
         public int? Age { get; set; }
     }
 
@@ -66,5 +75,8 @@ namespace LiteApi.Tests.LiteApiControllerTests
         public int? OlderThan { get; set; }
         [Where("@0 <= Age && Age <= @1")]
         public int[] AgeBetween { get; set; }
+        public string FamilyName { get; set; }
+        [Where("FamilyName == \"L3\"")]
+        public string L3s { get; set; }
     }
 }

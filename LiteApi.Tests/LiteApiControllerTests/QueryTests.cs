@@ -34,12 +34,12 @@ namespace LiteApi.Tests.LiteApiControllerTests
         [TestMethod]
         public void OrderBy_two_properties()
         {
-            var queryDescriptor = new PersonDtoQueryDescriptor() { OrderBy = new[] { "FirstName", "LastName" } };
+            var queryDescriptor = new PersonDtoQueryDescriptor() { OrderBy = new[] { "FirstName", "FamilyName" } };
             var result = _controller.Get(queryDescriptor) as OkNegotiatedContentResult<IQueryable<PersonDto>>;
             Assert.IsNotNull(result);
             var items = result.Content.ToList();
             Assert.IsTrue(items[1].FirstName == "F2");
-            Assert.IsTrue(items[3].LastName == "L3");
+            Assert.IsTrue(items[3].FamilyName == "L3");
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         }
 
         [TestMethod]
-        public void CustomWhereClause_whith_multiple_value_parameter()
+        public void CustomWhereClause_with_multiple_value_parameter()
         {
             var qd = new PersonDtoQueryDescriptor() { AgeBetween = new[] { 0, 50 } };
             var result = _controller.Get(qd) as OkNegotiatedContentResult<IQueryable<PersonDto>>;
@@ -131,5 +131,26 @@ namespace LiteApi.Tests.LiteApiControllerTests
             var items = result.Content.ToList();
             Assert.AreEqual(4, items.Count);
         }
+
+        [TestMethod]
+        public void Where_with_different_mapping_names()
+        {
+            var qd = new PersonDtoQueryDescriptor() { FamilyName = "L2" };
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IQueryable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.AreEqual(1, items.Count);
+        }
+
+        [TestMethod]
+        public void CustomWhereClause_with_different_mapping_names()
+        {
+            var qd = new PersonDtoQueryDescriptor() { L3s = "True"};
+            var result = _controller.Get(qd) as OkNegotiatedContentResult<IQueryable<PersonDto>>;
+            Assert.IsNotNull(result);
+            var items = result.Content.ToList();
+            Assert.IsTrue(items.Any(i => i.FamilyName == "L3"));
+        }
+
     }
 }

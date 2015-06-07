@@ -6,10 +6,11 @@ using System.Reflection;
 using System.Linq.Dynamic;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace LiteApi
 {
-    public class QueryBuilder<TEntity, TQueryDescriptor>
+    public class QueryBuilder<TEntity, TDto, TQueryDescriptor>
     {
         private readonly IQueryable<TEntity> _collection;
         private readonly TQueryDescriptor _queryDescriptor;
@@ -53,7 +54,7 @@ namespace LiteApi
 
         private IQueryable AddDynamicWhere(PropertyInfo prop, IQueryable queryable)
         {
-            var whereClause = prop.GetCustomAttribute<WhereAttribute>().WhereClause;
+            var whereClause = ChangePropertyNamesBasedOnMapping(prop.GetCustomAttribute<WhereAttribute>().WhereClause);
             if (whereClause.Contains("@"))
             {
                 if (prop.PropertyType.IsArray)
@@ -72,7 +73,7 @@ namespace LiteApi
             return queryable.Where(whereClause);
         }
 
-        private Expression AddWhereExpressions(System.Reflection.PropertyInfo prop, Expression rootExpression)
+        private Expression AddWhereExpressions(PropertyInfo prop, Expression rootExpression)
         {
             var propValue = prop.GetValue(_queryDescriptor);
             if (propValue == null)
@@ -155,7 +156,7 @@ namespace LiteApi
         private Expression AddWhereWithOperator(string fieldName, Op op, object referenceValue, Expression rootExpression)
         {
             var itemExpr = Expression.Parameter(typeof(TEntity), "entity");
-            var left = Expression.Property(itemExpr, fieldName);
+            var left = Expression.Property(itemExpr, GetFieldNameOfEntity(fieldName));
             var right = Expression.Constant(referenceValue);
             Expression operationExpr;
             switch (op)
@@ -195,7 +196,7 @@ namespace LiteApi
         {
             var itemExpr = Expression.Parameter(typeof(TEntity), "entity");
             //var propertyToOrderByExpr = Expression.Property(itemExpr, fieldName);
-            var left = Expression.Property(itemExpr, fieldName);
+            var left = Expression.Property(itemExpr, GetFieldNameOfEntity(fieldName));
             var right = Expression.Constant(referenceValue);
             var eq = Expression.Equal(left, right);
 
@@ -211,7 +212,7 @@ namespace LiteApi
         private Expression AddOrderBy(string fieldName, Expression rootExpression)
         {
             var itemExpr = Expression.Parameter(typeof(TEntity), "entity");
-            var propertyToOrderByExpr = Expression.Property(itemExpr, fieldName);
+            var propertyToOrderByExpr = Expression.Property(itemExpr, GetFieldNameOfEntity(fieldName));
             var orderByExpr = Expression.Call(
                 typeof(Queryable),
                 "OrderBy",
@@ -224,7 +225,7 @@ namespace LiteApi
         private Expression AddOrderByDesc(string fieldName, Expression rootExpression)
         {
             var itemExpr = Expression.Parameter(typeof(TEntity), "entity");
-            var propertyToOrderByExpr = Expression.Property(itemExpr, fieldName);
+            var propertyToOrderByExpr = Expression.Property(itemExpr, GetFieldNameOfEntity(fieldName));
             var orderByExpr = Expression.Call(
                 typeof(Queryable),
                 "OrderByDesc",
@@ -256,7 +257,26 @@ namespace LiteApi
         }
         private bool IsAPropertyOfEntity(string propertyName)
         {
-            return _entityProperties.Select(p => p.Name).Any(p => p == propertyName);
+            return GetFieldNameOfEntity(propertyName) != null;
+            //return _entityProperties.Select(p => p.Name).Any(p => p == propertyName);
+        }
+        private string GetFieldNameOfEntity(string fieldNameOfDto)
+        {
+            var map = Mapper.FindTypeMapFor<TDto, TEntity>();
+            var propMap = map.GetPropertyMaps().SingleOrDefault(pm => pm.SourceMember.Name == fieldNameOfDto);
+            if (propMap == null)
+                return null;
+            return propMap.DestinationProperty.MemberInfo.Name;
+        }
+        private string ChangePropertyNamesBasedOnMapping(string whereClause)
+        {
+            var result = whereClause;
+            var map = Mapper.FindTypeMapFor<TDto, TEntity>();
+            foreach (var propertyMap in map.GetPropertyMaps())
+            {
+                result = result.Replace(propertyMap.SourceMember.Name, propertyMap.DestinationProperty.MemberInfo.Name);
+            }
+            return result;
         }
     }
 }

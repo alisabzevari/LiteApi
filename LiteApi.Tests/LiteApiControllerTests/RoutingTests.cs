@@ -14,7 +14,7 @@ namespace LiteApi.Tests.LiteApiControllerTests
         [TestMethod]
         public void Post_must_return_created_url()
         {
-            PostAsJson("http://localhost/api/person", new PersonDto() { Id = 100, FirstName = "New F1", LastName = "new L1" }, message =>
+            PostAsJson("http://localhost/api/person", new PersonDto() { Id = 100, FirstName = "New F1", FamilyName = "new L1" }, message =>
             {
                 Assert.AreEqual(HttpStatusCode.Created, message.StatusCode);
                 Assert.AreEqual("http://localhost/api/person?id=100", message.Headers.Location.AbsoluteUri);

@@ -97,7 +97,7 @@ namespace LiteApi
         }
         private IQueryable<TEntity> PerformQuery(IQueryable<TEntity> queryable, TQueryDescriptor queryDescriptor)
         {
-            var qb = new QueryBuilder<TEntity, TQueryDescriptor>(queryable, queryDescriptor);
+            var qb = new QueryBuilder<TEntity, TDto, TQueryDescriptor>(queryable, queryDescriptor);
             return qb.Execute();
         }
 
