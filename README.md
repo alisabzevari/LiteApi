@@ -1,5 +1,5 @@
 # LiteApi
-ASP.NET Wrapper to easily write Restfulish Api Controllers
+LiteApi is an ApiController that simplifies creating RESTfulish apis. It helps service designer to use ASP.NET WebApi for writing message based services. It inspired by ServiceStack's AutoQuery.
 
 **Caution:** This project is in early stages of development.
 
